@@ -7,9 +7,14 @@ import cv2
 
 def get_videos(subject="*"):
     video_files = glob.glob("data/savee/AudioVisualClip/" + subject + "/*.avi")
-    print(video_files)
-    for video in videofiles:
-        vid2frames(video,)
+    # print(video_files)
+    n = 0
+    for video in video_files:
+        temp = video.split("/")
+        # print("asdf", (video, temp[3]))
+        print(n)
+        n = n + 1
+        vid2frames(video, temp[3])
 
 
 def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC"):
@@ -19,7 +24,7 @@ def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC"):
     while cap.isOpened():
         # Capture frame-by-frame
         ret, frame = cap.read()
-        # print(ret)
+        # print(str(n) +"\r")
         if ret:
 
             # Display the resulting frame
