@@ -18,14 +18,15 @@ def delete_frames():
 
 def get_videos(subject="*"):
     video_files = glob.glob("data/savee/AudioVisualClip/" + subject + "/*.avi")
-    # print(video_files)
+    print(video_files)
     n = 0
     for video in video_files:
         temp = video.split("/")
         # print("asdf", (video, temp[3]))
         print(n)
         n = n + 1
-        vid2frames(video, temp[3], temp[4][:-4])
+        if n<10:
+            vid2frames(video, temp[3], temp[4][:-4])
 
 
 def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC",vid_label="a1"):
@@ -36,7 +37,7 @@ def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC",vid_lab
         # Capture frame-by-frame
         ret, frame = cap.read()
         # print(str(n) +"\r")
-        if ret:
+        if ret is True and n%4 == 0:
 
             # Display the resulting frame
             # cv2.imshow('Frame', frame)
@@ -81,4 +82,6 @@ def main(argv):
 
 
 if __name__ == "__main__":
+    sys.stdout = open('logs/cleaning.txt', 'w')
+    sys.stderr = open('logs/cleaning-err.txt', 'w')
     main(sys.argv[1:])
