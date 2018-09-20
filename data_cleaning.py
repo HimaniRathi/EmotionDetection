@@ -1,15 +1,18 @@
+import getopt
 import glob
 import sys
 
 import cv2
 
 
-def get_videos():
-    video_files = glob.glob("data/savee/AudioVisualClip/*/*.avi")
+def get_videos(subject="*"):
+    video_files = glob.glob("data/savee/AudioVisualClip/" + subject + "/*.avi")
     print(video_files)
+    for video in videofiles:
+        vid2frames(video,)
 
 
-def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi"):
+def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC"):
     cap = cv2.VideoCapture(path)
     # print(cap)
     n = 0
@@ -21,7 +24,7 @@ def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi"):
 
             # Display the resulting frame
             # cv2.imshow('Frame', frame)
-            cv2.imwrite('data/frames/DC_a1_' + str(n) + '.png', frame)
+            cv2.imwrite('data/frames/' + subject + '_a1_' + str(n) + '.png', frame)
             n = n + 1
             # print(n)
             # Press Q on keyboard to  exit
@@ -38,8 +41,23 @@ def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi"):
     # Closes all the frames
     cv2.destroyAllWindows()
 
+
 def main(argv):
-    get_videos()
+    global opts
+    try:
+        opts, args = getopt.getopt(argv, "hs:")
+    except getopt.GetoptError:
+        print('data_cleaning.py -[s:]')
+        sys.exit()
+    subject = "*"
+    for opt, arg in opts:
+        if opt == '-h':
+            print('data_cleaning.py -[s:]')
+            sys.exit()
+        elif opt == '-s':
+            subject = str(arg)
+
+    get_videos(subject)
 
 
 if __name__ == "__main__":
