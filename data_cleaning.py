@@ -1,8 +1,19 @@
 import getopt
 import glob
 import sys
-
+import os
 import cv2
+
+
+def delete_frames():
+    mydir = "data/frames"
+    filelist = [f for f in os.listdir(mydir)]
+    # print(filelist)
+    for f in filelist:
+        n = int(f.split('_')[2][:-4])
+        if n % 4 != 0:
+            # print(n)
+            os.remove(os.path.join(mydir, f))
 
 
 def get_videos(subject="*"):
@@ -14,10 +25,10 @@ def get_videos(subject="*"):
         # print("asdf", (video, temp[3]))
         print(n)
         n = n + 1
-        vid2frames(video, temp[3])
+        vid2frames(video, temp[3], temp[4][:-4])
 
 
-def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC"):
+def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC",vid_label="a1"):
     cap = cv2.VideoCapture(path)
     # print(cap)
     n = 0
@@ -29,7 +40,7 @@ def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC"):
 
             # Display the resulting frame
             # cv2.imshow('Frame', frame)
-            cv2.imwrite('data/frames/' + subject + '_a1_' + str(n) + '.png', frame)
+            cv2.imwrite('data/frames/' + subject + '_' + vid_label + '_' + str(n) + '.png', frame)
             n = n + 1
             # print(n)
             # Press Q on keyboard to  exit
@@ -49,18 +60,22 @@ def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC"):
 
 def main(argv):
     global opts
+    help_text = 'data_cleaning.py -[s:]'
     try:
-        opts, args = getopt.getopt(argv, "hs:")
+        opts, args = getopt.getopt(argv, "hs:d")
     except getopt.GetoptError:
-        print('data_cleaning.py -[s:]')
+        print(help_text)
         sys.exit()
     subject = "*"
     for opt, arg in opts:
         if opt == '-h':
-            print('data_cleaning.py -[s:]')
+            print(help_text)
             sys.exit()
         elif opt == '-s':
             subject = str(arg)
+        elif opt == '-d':
+            delete_frames()
+            sys.exit()
 
     get_videos(subject)
 
