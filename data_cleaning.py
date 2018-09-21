@@ -3,6 +3,7 @@ import glob
 import sys
 import os
 import cv2
+import numpy as np
 
 
 def delete_frames():
@@ -25,11 +26,11 @@ def get_videos(subject="*"):
         # print("asdf", (video, temp[3]))
         print(n)
         n = n + 1
-        if n<10:
+        if n < 10:
             vid2frames(video, temp[3], temp[4][:-4])
 
 
-def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC",vid_label="a1"):
+def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC", vid_label="a1"):
     cap = cv2.VideoCapture(path)
     # print(cap)
     n = 0
@@ -37,7 +38,7 @@ def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC",vid_lab
         # Capture frame-by-frame
         ret, frame = cap.read()
         # print(str(n) +"\r")
-        if ret is True and n%4 == 0:
+        if ret is True and n % 4 == 0:
 
             # Display the resulting frame
             # cv2.imshow('Frame', frame)
@@ -59,11 +60,61 @@ def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC",vid_lab
     cv2.destroyAllWindows()
 
 
+def translate_labels(l):
+    label = []
+    if l == 'a':
+        # Angry
+        label = np.append(label, ([1, 0, 0, 0, 0, 0, 0]))
+    elif l == 'd':
+        # Disgust
+        label = np.append(label, ([0, 1, 0, 0, 0, 0, 0]))
+    elif l == 'f':
+        # Fear
+        label = np.append(label, ([0, 0, 1, 0, 0, 0, 0]))
+    elif l == 'h':
+        # Happy
+        label = np.append(label, ([0, 0, 0, 1, 0, 0, 0]))
+    elif l == 'n':
+        # Neutral
+        label = np.append(label, ([0, 0, 0, 0, 1, 0, 0]))
+    elif l == 'sa':
+        # Sad
+        label = np.append(label, ([0, 0, 0, 0, 0, 1, 0]))
+    elif l == 'su':
+        # Surprise
+        label = np.append(label, ([0, 0, 0, 0, 0, 0, 1]))
+    return label
+
+
+def numpy_array_image_label():
+    files = glob.glob("data/frames/*.png")
+    x_data = []
+    label = []
+    for myFile in files:
+        temp = myFile.split("_")
+        l = ''.join([i for i in temp[1] if not i.isdigit()])
+        label.append(translate_labels(l))
+        image = cv2.imread(myFile)
+        x_data.append(image)
+
+    images = np.array(x_data)
+    labels = np.array(label)
+    return images, labels
+
+
+def to_numpy_array():
+    image, label = numpy_array_image_label()
+    image = np.copy(image)
+    label = np.copy(label)
+    np.save('data/x_train', image)
+    np.save('data/y_train', label)
+
+
 def main(argv):
     global opts
-    help_text = 'data_cleaning.py -[s:]'
+    help_text = 'data_cleaning.py -[s:dn]'
     try:
-        opts, args = getopt.getopt(argv, "hs:d")
+        opts, args = getopt.getopt(argv, "hs:dn")
     except getopt.GetoptError:
         print(help_text)
         sys.exit()
@@ -76,6 +127,9 @@ def main(argv):
             subject = str(arg)
         elif opt == '-d':
             delete_frames()
+            sys.exit()
+        elif opt == '-n':
+            to_numpy_array()
             sys.exit()
 
     get_videos(subject)
