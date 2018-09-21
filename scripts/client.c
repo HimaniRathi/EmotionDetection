@@ -7,34 +7,43 @@
 #include <string.h>
 
 int main(int argc, char *argv[]) {
-    int sockfd, portno, n;
-    struct sockaddr_in serv_addr;
-    struct hostent *server;
-
-    char buffer[256];
+    
 
     if (argc < 3) {
         fprintf(stderr,"usage %s hostname(s) port [command]\n", argv[0]);
         exit(0);
     }
 
-    portno = atoi(argv[2]);
+    int portno = atoi(argv[2]);
 
     /* Create a socket point */
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    
 
-    if (sockfd < 0) {
-        perror("ERROR opening socket");
-        exit(1);
-    }
-
-    token = strtok(argv[1], ':');
+    
+    char *token;
+    printf("Hosts: %s\n", argv[1]);
+    token = strtok(argv[1], ":");
+    
     while( token != NULL ) {
-        printf( " %s\n", token );
+        printf( "host : %s\n", token );
+        
+        int sockfd, n;
+        struct sockaddr_in serv_addr;
+        struct hostent *server;
+
+        char buffer[256];
+        
+        sockfd = socket(AF_INET, SOCK_STREAM, 0);
+        if (sockfd < 0) {
+            perror("ERROR opening socket");
+            token = strtok(NULL, ":");
+            continue;
+        }
         server = gethostbyname(token);
 
         if (server == NULL) {
             fprintf(stderr,"ERROR, no such host:%s\n",server);
+            token = strtok(NULL, ":");
             continue;
         }
 
@@ -45,7 +54,8 @@ int main(int argc, char *argv[]) {
 
         /* Now connect to the server */
         if (connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
-            perror("ERROR connecting to host:%s\n",server);
+            perror("ERROR connecting to host\n");
+            token = strtok(NULL, ":");
             continue;
         }
 
@@ -64,7 +74,7 @@ int main(int argc, char *argv[]) {
         /* Send message to the server */
         n = write(sockfd, buffer, strlen(buffer));
 
-        token = strtok(NULL, s);
+        token = strtok(NULL, ":");
     }
     return 0;
 }
