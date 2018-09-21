@@ -31,6 +31,7 @@ def get_videos(subject="*"):
 
 
 def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC", vid_label="a1"):
+    # noinspection PyArgumentList
     cap = cv2.VideoCapture(path)
     # print(cap)
     n = 0
@@ -62,25 +63,25 @@ def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC", vid_la
 
 def translate_labels(l):
     label = []
-    if l == 'a':
+    if 'a' == l:
         # Angry
         label = np.append(label, ([1, 0, 0, 0, 0, 0, 0]))
-    elif l == 'd':
+    elif 'd' == l:
         # Disgust
         label = np.append(label, ([0, 1, 0, 0, 0, 0, 0]))
-    elif l == 'f':
+    elif 'f' == l:
         # Fear
         label = np.append(label, ([0, 0, 1, 0, 0, 0, 0]))
-    elif l == 'h':
+    elif 'h' == l:
         # Happy
         label = np.append(label, ([0, 0, 0, 1, 0, 0, 0]))
-    elif l == 'n':
+    elif 'n' == l:
         # Neutral
         label = np.append(label, ([0, 0, 0, 0, 1, 0, 0]))
-    elif l == 'sa':
+    elif 'sa' == l:
         # Sad
         label = np.append(label, ([0, 0, 0, 0, 0, 1, 0]))
-    elif l == 'su':
+    elif 'su' == l:
         # Surprise
         label = np.append(label, ([0, 0, 0, 0, 0, 0, 1]))
     return label
@@ -92,7 +93,7 @@ def numpy_array_image_label():
     label = []
     for myFile in files:
         temp = myFile.split("_")
-        l = ''.join([i for i in temp[1] if not i.isdigit()])
+        l: str = ''.join([i for i in temp[1] if not i.isdigit()])
         label.append(translate_labels(l))
         image = cv2.imread(myFile)
         x_data.append(image)
@@ -106,13 +107,20 @@ def to_numpy_array():
     image, label = numpy_array_image_label()
     image = np.copy(image)
     label = np.copy(label)
+    print("image", image.shape)
+    print("label", label.shape)
     np.save('data/x_train', image)
     np.save('data/y_train', label)
 
 
 def main(argv):
     global opts
-    help_text = 'data_cleaning.py -[s:dn]'
+    help_text = """data_cleaning.py  -h --help
+    -h --help       Get help.
+    -s --subject    Specify subject name[JK,DC,...]
+    -d --delete     Delete every frame other than multiples of 4.
+    -n --numpy      Save data/frames/ content as a numpy array in data/x_train.npy and data/y_train.npy
+    """
     try:
         opts, args = getopt.getopt(argv, "hs:dn")
     except getopt.GetoptError:
@@ -120,22 +128,23 @@ def main(argv):
         sys.exit()
     subject = "*"
     for opt, arg in opts:
-        if opt == '-h':
+        if opt in ('-h', '--help'):
             print(help_text)
             sys.exit()
-        elif opt == '-s':
+        elif opt in ('-s', '--subject'):
             subject = str(arg)
-        elif opt == '-d':
+            get_videos(subject)
+            sys.exit()
+        elif opt in ('-d', '--delete'):
             delete_frames()
             sys.exit()
-        elif opt == '-n':
+        elif opt in ('-n', '--numpy'):
             to_numpy_array()
             sys.exit()
-
-    get_videos(subject)
+    print(help_text)
 
 
 if __name__ == "__main__":
-    sys.stdout = open('logs/cleaning.txt', 'w')
-    sys.stderr = open('logs/cleaning-err.txt', 'w')
+    # sys.stdout = open('logs/cleaning.txt', 'w')
+    # sys.stderr = open('logs/cleaning-err.txt', 'w')
     main(sys.argv[1:])
