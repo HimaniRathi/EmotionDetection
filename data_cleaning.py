@@ -6,8 +6,11 @@ import cv2
 import numpy as np
 
 
+datadir = "data/"
+
+
 def delete_frames():
-    mydir = "data/frames"
+    mydir = datadir+"frames"
     filelist = [f for f in os.listdir(mydir)]
     # print(filelist)
     for f in filelist:
@@ -18,7 +21,7 @@ def delete_frames():
 
 
 def get_videos(subject="*"):
-    video_files = glob.glob("data/savee/AudioVisualClip/" + subject + "/*.avi")
+    video_files = glob.glob(datadir+"savee/AudioVisualClip/" + subject + "/*.avi")
     print(video_files)
     n = 0
     for video in video_files:
@@ -26,11 +29,10 @@ def get_videos(subject="*"):
         # print("asdf", (video, temp[3]))
         print(n)
         n = n + 1
-        if n < 10:
-            vid2frames(video, temp[3], temp[4][:-4])
+        vid2frames(video, temp[3], temp[4][:-4])
 
 
-def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC", vid_label="a1"):
+def vid2frames(path=datadir+"savee/AudioVisualClip/DC/a1.avi", subject="DC", vid_label="a1"):
     # noinspection PyArgumentList
     cap = cv2.VideoCapture(path)
     # print(cap)
@@ -39,11 +41,11 @@ def vid2frames(path="data/savee/AudioVisualClip/DC/a1.avi", subject="DC", vid_la
         # Capture frame-by-frame
         ret, frame = cap.read()
         # print(str(n) +"\r")
-        if ret is True and n % 4 == 0:
+        if ret is True:
 
             # Display the resulting frame
             # cv2.imshow('Frame', frame)
-            cv2.imwrite('data/frames/' + subject + '_' + vid_label + '_' + str(n) + '.png', frame)
+            cv2.imwrite(datadir+'frames/' + subject + '_' + vid_label + '_' + str(n).zfill(5) + '.png', frame)
             n = n + 1
             # print(n)
             # Press Q on keyboard to  exit
@@ -87,47 +89,46 @@ def translate_labels(l):
     return label
 
 
-def numpy_array_image_label():
-    files = glob.glob("data/frames/*.png")
+def to_numpy_array():
+    files = sorted(glob.glob(datadir+"frames/*.png"))
+    print(files)
     x_data = []
     label = []
     for myFile in files:
         temp = myFile.split("_")
         l: str = ''.join([i for i in temp[1] if not i.isdigit()])
         label.append(translate_labels(l))
-        image = cv2.imread(myFile)
+        image = cv2.imread(myFile, cv2.IMREAD_GRAYSCALE)
         x_data.append(image)
+        del image
 
-    images = np.array(x_data)
-    labels = np.array(label)
-    return images, labels
-
-
-def to_numpy_array():
-    image, label = numpy_array_image_label()
-    image = np.copy(image)
-    label = np.copy(label)
+    image = np.array(x_data)
+    label = np.array(label)
     print("image", image.shape)
     print("label", label.shape)
-    np.save('data/x_train', image)
-    np.save('data/y_train', label)
+    np.save(datadir+'x_train', image)
+    np.save(datadir+'y_train', label)
 
 
 def main(argv):
     global opts
+    global datadir
     help_text = """data_cleaning.py  -h --help
     -h --help       Get help.
     -s --subject    Specify subject name[JK,DC,...]
     -d --delete     Delete every frame other than multiples of 4.
     -n --numpy      Save data/frames/ content as a numpy array in data/x_train.npy and data/y_train.npy
+    -t --test       Test mode.(place first)
     """
     try:
-        opts, args = getopt.getopt(argv, "hs:dn")
+        opts, args = getopt.getopt(argv, "hs:dnt")
     except getopt.GetoptError:
         print(help_text)
         sys.exit()
     subject = "*"
     for opt, arg in opts:
+        if opt in ('-t', '--test'):
+            datadir = "datat/"
         if opt in ('-h', '--help'):
             print(help_text)
             sys.exit()
