@@ -99,25 +99,30 @@ def to_numpy_array():
     x_data = []
     final = []
     label = []
+    l = ""
     for myFile in files:
         temp = myFile.split("_")
-        l = ''.join([i for i in temp[1] if not i.isdigit()])
-        label.append(translate_labels(l))
+
         image = cv2.imread(myFile, cv2.IMREAD_GRAYSCALE)
-        if int(temp[2][:-4]) == 0:
-            final.append(x_data)
+        if int(temp[2][:-4]) == 0 and len(x_data) is not 0:
+            # print(myFile)
+            l = ''.join([i for i in temp[1] if not i.isdigit()])
+            label.append(translate_labels(l))
+            # print(np.array(x_data).shape)
+            fill = np.zeros((abs(60-np.array(x_data).shape[0]), 48, 48))
+            final.append(np.concatenate((x_data, fill), axis=0)[0:60])
             x_data = []
-        # print(image.shape)
+
         x_data.append(image)
         del image
 
-    final.append(x_data)
+    fill = np.zeros((abs(60 - np.array(x_data).shape[0]), 48, 48))
+    final.append(np.concatenate((x_data, fill), axis=0)[0:60])
     del x_data
     video = np.array(final)
     del final
-    for x in video:
-        print(np.array(x).shape)
-
+    label.append(translate_labels(l))
+    video = video.reshape(-1, video.shape[1], video.shape[3], video.shape[2], 1)
     label = np.array(label)
     print("video", video.shape)
     print("label", label.shape)

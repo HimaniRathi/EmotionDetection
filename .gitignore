@@ -1,4 +1,5 @@
 /data
+/datat
 .*
 /__pycache__
 scripts/client
