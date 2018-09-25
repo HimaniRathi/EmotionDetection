@@ -46,9 +46,9 @@ def vid2frames(path=datadir + "savee/AudioVisualClip/DC/a1.avi", subject="DC", v
 
             # Display the resulting frame
             # cv2.imshow('Frame', frame)
-            frame = get_largest_face(frame, detect_faces(cv2.CascadeClassifier(datadir+'lbpcascade_frontalface.xml'),
+            frame = get_largest_face(frame, detect_faces(cv2.CascadeClassifier('lbpcascade_frontalface.xml'),
                                                          frame))
-            frame = cv2.resize(frame, (48, 48), interpolation=cv2.INTER_CUBIC).shape
+            frame = cv2.resize(frame, (48, 48), interpolation=cv2.INTER_CUBIC)
             cv2.imwrite(datadir + 'frames/' + subject + '_' + vid_label + '_' + str(n).zfill(5) + '.png', frame)
             n = n + 1
             # print(n)
@@ -95,22 +95,33 @@ def translate_labels(l):
 
 def to_numpy_array():
     files = sorted(glob.glob(datadir + "frames/*.png"))
-    print(files)
+    # print(files)
     x_data = []
+    final = []
     label = []
     for myFile in files:
         temp = myFile.split("_")
-        l: str = ''.join([i for i in temp[1] if not i.isdigit()])
+        l = ''.join([i for i in temp[1] if not i.isdigit()])
         label.append(translate_labels(l))
         image = cv2.imread(myFile, cv2.IMREAD_GRAYSCALE)
+        if int(temp[2][:-4]) == 0:
+            final.append(x_data)
+            x_data = []
+        # print(image.shape)
         x_data.append(image)
         del image
 
-    image = np.array(x_data)
+    final.append(x_data)
+    del x_data
+    video = np.array(final)
+    del final
+    for x in video:
+        print(np.array(x).shape)
+
     label = np.array(label)
-    print("image", image.shape)
+    print("video", video.shape)
     print("label", label.shape)
-    np.save(datadir + 'x_train', image)
+    np.save(datadir + 'x_train', video)
     np.save(datadir + 'y_train', label)
 
 
