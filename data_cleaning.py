@@ -5,12 +5,13 @@ import os
 import cv2
 import numpy as np
 
+from detect_face import get_largest_face, detect_faces
 
 datadir = "data/"
 
 
 def delete_frames():
-    mydir = datadir+"frames"
+    mydir = datadir + "frames"
     filelist = [f for f in os.listdir(mydir)]
     # print(filelist)
     for f in filelist:
@@ -21,7 +22,7 @@ def delete_frames():
 
 
 def get_videos(subject="*"):
-    video_files = glob.glob(datadir+"savee/AudioVisualClip/" + subject + "/*.avi")
+    video_files = glob.glob(datadir + "savee/AudioVisualClip/" + subject + "/*.avi")
     print(video_files)
     n = 0
     for video in video_files:
@@ -32,7 +33,7 @@ def get_videos(subject="*"):
         vid2frames(video, temp[3], temp[4][:-4])
 
 
-def vid2frames(path=datadir+"savee/AudioVisualClip/DC/a1.avi", subject="DC", vid_label="a1"):
+def vid2frames(path=datadir + "savee/AudioVisualClip/DC/a1.avi", subject="DC", vid_label="a1"):
     # noinspection PyArgumentList
     cap = cv2.VideoCapture(path)
     # print(cap)
@@ -45,7 +46,10 @@ def vid2frames(path=datadir+"savee/AudioVisualClip/DC/a1.avi", subject="DC", vid
 
             # Display the resulting frame
             # cv2.imshow('Frame', frame)
-            cv2.imwrite(datadir+'frames/' + subject + '_' + vid_label + '_' + str(n).zfill(5) + '.png', frame)
+            frame = get_largest_face(frame, detect_faces(cv2.CascadeClassifier(datadir+'lbpcascade_frontalface.xml'),
+                                                         frame))
+            frame = cv2.resize(frame, (48, 48), interpolation=cv2.INTER_CUBIC).shape
+            cv2.imwrite(datadir + 'frames/' + subject + '_' + vid_label + '_' + str(n).zfill(5) + '.png', frame)
             n = n + 1
             # print(n)
             # Press Q on keyboard to  exit
@@ -90,7 +94,7 @@ def translate_labels(l):
 
 
 def to_numpy_array():
-    files = sorted(glob.glob(datadir+"frames/*.png"))
+    files = sorted(glob.glob(datadir + "frames/*.png"))
     print(files)
     x_data = []
     label = []
@@ -106,8 +110,8 @@ def to_numpy_array():
     label = np.array(label)
     print("image", image.shape)
     print("label", label.shape)
-    np.save(datadir+'x_train', image)
-    np.save(datadir+'y_train', label)
+    np.save(datadir + 'x_train', image)
+    np.save(datadir + 'y_train', label)
 
 
 def main(argv):
