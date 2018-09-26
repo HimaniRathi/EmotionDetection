@@ -28,7 +28,7 @@ def get_videos(subject="*"):
     for video in video_files:
         temp = video.split("/")
         # print("asdf", (video, temp[3]))
-        print(n)
+        print(str(n)+" vid name: "+video)
         n = n + 1
         vid2frames(video, temp[3], temp[4][:-4])
 
@@ -48,7 +48,10 @@ def vid2frames(path=datadir + "savee/AudioVisualClip/DC/a1.avi", subject="DC", v
             # cv2.imshow('Frame', frame)
             frame = get_largest_face(frame, detect_faces(cv2.CascadeClassifier('lbpcascade_frontalface.xml'),
                                                          frame))
-            frame = cv2.resize(frame, (48, 48), interpolation=cv2.INTER_CUBIC)
+            try:
+                frame = cv2.resize(frame, (48, 48), interpolation=cv2.INTER_CUBIC)
+            except cv2.error as e:
+                frame = np.zeros((48, 48))
             cv2.imwrite(datadir + 'frames/' + subject + '_' + vid_label + '_' + str(n).zfill(5) + '.png', frame)
             n = n + 1
             # print(n)

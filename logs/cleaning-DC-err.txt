@@ -1,0 +1,13 @@
+OpenCV Error: Assertion failed (ssize.width > 0 && ssize.height > 0) in resize, file /build/opencv-zcaJjh/opencv-3.2.0+dfsg/modules/imgproc/src/imgwarp.cpp, line 3492
+OpenCV Error: Assertion failed (ssize.width > 0 && ssize.height > 0) in resize, file /build/opencv-zcaJjh/opencv-3.2.0+dfsg/modules/imgproc/src/imgwarp.cpp, line 3492
+OpenCV Error: Assertion failed (ssize.width > 0 && ssize.height > 0) in resize, file /build/opencv-zcaJjh/opencv-3.2.0+dfsg/modules/imgproc/src/imgwarp.cpp, line 3492
+OpenCV Error: Assertion failed (ssize.width > 0 && ssize.height > 0) in resize, file /build/opencv-zcaJjh/opencv-3.2.0+dfsg/modules/imgproc/src/imgwarp.cpp, line 3492
+OpenCV Error: Assertion failed (ssize.width > 0 && ssize.height > 0) in resize, file /build/opencv-zcaJjh/opencv-3.2.0+dfsg/modules/imgproc/src/imgwarp.cpp, line 3492
+OpenCV Error: Assertion failed (ssize.width > 0 && ssize.height > 0) in resize, file /build/opencv-zcaJjh/opencv-3.2.0+dfsg/modules/imgproc/src/imgwarp.cpp, line 3492
+OpenCV Error: Assertion failed (ssize.width > 0 && ssize.height > 0) in resize, file /build/opencv-zcaJjh/opencv-3.2.0+dfsg/modules/imgproc/src/imgwarp.cpp, line 3492
+OpenCV Error: Assertion failed (ssize.width > 0 && ssize.height > 0) in resize, file /build/opencv-zcaJjh/opencv-3.2.0+dfsg/modules/imgproc/src/imgwarp.cpp, line 3492
+OpenCV Error: Assertion failed (ssize.width > 0 && ssize.height > 0) in resize, file /build/opencv-zcaJjh/opencv-3.2.0+dfsg/modules/imgproc/src/imgwarp.cpp, line 3492
+OpenCV Error: Assertion failed (ssize.width > 0 && ssize.height > 0) in resize, file /build/opencv-zcaJjh/opencv-3.2.0+dfsg/modules/imgproc/src/imgwarp.cpp, line 3492
+OpenCV Error: Assertion failed (ssize.width > 0 && ssize.height > 0) in resize, file /build/opencv-zcaJjh/opencv-3.2.0+dfsg/modules/imgproc/src/imgwarp.cpp, line 3492
+OpenCV Error: Assertion failed (ssize.width > 0 && ssize.height > 0) in resize, file /build/opencv-zcaJjh/opencv-3.2.0+dfsg/modules/imgproc/src/imgwarp.cpp, line 3492
+OpenCV Error: Assertion failed (ssize.width > 0 && ssize.height > 0) in resize, file /build/opencv-zcaJjh/opencv-3.2.0+dfsg/modules/imgproc/src/imgwarp.cpp, line 3492
