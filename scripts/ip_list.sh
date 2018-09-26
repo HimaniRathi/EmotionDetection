@@ -1,7 +1,21 @@
 # source load_ip_list.sh # to get the environ vars
 self="localhost"
 all=$self
-chandu="172.16.23.148"
-himani="172.16.23.73"
+chandu="localhost"
+himani="loaclhost"
 others="$himani:$chandu"
+l26="172.16.25.94"
+others="$others:$l26"
+l25="172.16.25.77"
+others="$others:$l25"
+l24="172.16.25.29"
+others="$others:$l24"
+l23="172.16.25.231"
+others="$others:$l23"
+l27="172.16.25.140"
+others="$others:$l27"
+l28="172.16.25.177"
+others="$others:$l28"
+lastrow="172.16.25.247"
+others="$others:$lastrow"
 all=$all:$others

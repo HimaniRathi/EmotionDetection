@@ -28,7 +28,7 @@ def get_videos(subject="*"):
     for video in video_files:
         temp = video.split("/")
         # print("asdf", (video, temp[3]))
-        print(str(n)+" vid name: "+video)
+        print(str(n) + " vid name: " + video)
         n = n + 1
         vid2frames(video, temp[3], temp[4][:-4])
 
@@ -112,7 +112,7 @@ def to_numpy_array():
             l = ''.join([i for i in temp[1] if not i.isdigit()])
             label.append(translate_labels(l))
             # print(np.array(x_data).shape)
-            fill = np.zeros((abs(60-np.array(x_data).shape[0]), 48, 48))
+            fill = np.zeros((abs(60 - np.array(x_data).shape[0]), 48, 48))
             final.append(np.concatenate((x_data, fill), axis=0)[0:60])
             x_data = []
 
@@ -133,6 +133,28 @@ def to_numpy_array():
     np.save(datadir + 'y_train', label)
 
 
+def to_image_numpy():
+    files = sorted(glob.glob(datadir + "frames/*.png"))
+    # print(files)
+    x_data = []
+    label = []
+    for myFile in files:
+        temp = myFile.split("_")
+        l: str = ''.join([i for i in temp[1] if not i.isdigit()])
+        label.append(translate_labels(l))
+        image = cv2.imread(myFile, cv2.IMREAD_GRAYSCALE)
+        x_data.append(image)
+        del image
+
+    image = np.array(x_data)
+    label = np.array(label)
+    image = image.reshape(-1, image.shape[1], image.shape[2], 1)
+    print("image", image.shape)
+    print("label", label.shape)
+    np.save(datadir + 'x_train_image', image)
+    np.save(datadir + 'y_train_image', label)
+
+
 def main(argv):
     global opts
     global datadir
@@ -141,10 +163,11 @@ def main(argv):
     -s --subject    Specify subject name[JK,DC,...]
     -d --delete     Delete every frame other than multiples of 4.
     -n --numpy      Save data/frames/ content as a numpy array in data/x_train.npy and data/y_train.npy
+    -i --image      Image based numpy.
     -t --test       Test mode.(place first)
     """
     try:
-        opts, args = getopt.getopt(argv, "hs:dnt")
+        opts, args = getopt.getopt(argv, "hs:dnti")
     except getopt.GetoptError:
         print(help_text)
         sys.exit()
@@ -157,6 +180,8 @@ def main(argv):
             sys.exit()
         elif opt in ('-s', '--subject'):
             subject = str(arg)
+            if subject == "all":
+                subject = "*"
             get_videos(subject)
             sys.exit()
         elif opt in ('-d', '--delete'):
@@ -164,6 +189,9 @@ def main(argv):
             sys.exit()
         elif opt in ('-n', '--numpy'):
             to_numpy_array()
+            sys.exit()
+        elif opt in ('-i', '--image'):
+            to_image_numpy()
             sys.exit()
     print(help_text)
 
