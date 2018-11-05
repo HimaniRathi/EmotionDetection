@@ -1,12 +1,16 @@
 import getopt
 import sys
 from keras import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense
+from keras.callbacks import EarlyStopping
+from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, TimeDistributed, LSTM, Conv3D, MaxPooling3D, \
+    ZeroPadding3D
 
 import numpy as np
 
 datadir = "data/"
-
+model = Sequential()
+input_shape = (48, 48, 1)
+output_shape = 7
 
 def save_model(model, index=""):
     model_json = model.to_json()
@@ -16,9 +20,8 @@ def save_model(model, index=""):
     model.save_weights(datadir + "model" + index + ".h5")
 
 
-def cnn_image_based(x_train, y_train, epochs, batch_size, validation_split):
-    model = Sequential()
-    model.add(Conv2D(filters=32, kernel_size=(3, 3), padding='same', activation='relu', input_shape=(48, 48, 1)))
+def cnn_image_based():
+    model.add(Conv2D(filters=32, kernel_size=(3, 3), padding='same', activation='relu', input_shape=input_shape))
     conv_arch = [(32, 2), (64, 2), (128, 2)]
     dense = [64, 2]
     if (conv_arch[0][1] - 1) != 0:
@@ -46,24 +49,100 @@ def cnn_image_based(x_train, y_train, epochs, batch_size, validation_split):
         for i in range(dense[1]):
             model.add(Dense(dense[0], activation='relu'))
             model.add(Dropout(0.25))
-    model.add(Dense(y_train.shape[1], activation='softmax'))
+    model.add(Dense(output_shape, activation='softmax'))
     # 16 layers
-    # optimizer:
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    print('Training....')
 
-    hist = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size,
-                     validation_split=validation_split, shuffle=True, verbose=1)
-    train_val_accuracy = hist.history
 
-    train_acc = train_val_accuracy['acc']
-    val_acc = train_val_accuracy['val_acc']
-    print('          Done!')
-    print('     Train acc: ', train_acc[-1])
-    print('Validation acc: ', val_acc[-1])
-    print(' Overfit ratio: ', val_acc[-1] / train_acc[-1])
-    save_model(model, index="imagebased")
-    print("Saved model to disk")
+def cnn_lstm():
+    model.add(TimeDistributed(Conv2D(32, (7, 7), strides=(2, 2),
+                                     activation='relu', padding='same'), input_shape=input_shape))
+    model.add(TimeDistributed(Conv2D(32, (3, 3),
+                                     kernel_initializer="he_normal", activation='relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
+
+    model.add(TimeDistributed(Conv2D(64, (3, 3),
+                                     padding='same', activation='relu')))
+    model.add(TimeDistributed(Conv2D(64, (3, 3),
+                                     padding='same', activation='relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
+
+    model.add(TimeDistributed(Conv2D(128, (3, 3),
+                                     padding='same', activation='relu')))
+    model.add(TimeDistributed(Conv2D(128, (3, 3),
+                                     padding='same', activation='relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
+
+    model.add(TimeDistributed(Conv2D(256, (3, 3),
+                                     padding='same', activation='relu')))
+    model.add(TimeDistributed(Conv2D(256, (3, 3),
+                                     padding='same', activation='relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
+
+    model.add(TimeDistributed(Conv2D(512, (3, 3),
+                                     padding='same', activation='relu')))
+    model.add(TimeDistributed(Conv2D(512, (3, 3),
+                                     padding='same', activation='relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
+
+    model.add(TimeDistributed(Flatten()))
+
+    model.add(Dropout(0.5))
+    model.add(LSTM(256, return_sequences=False, dropout=0.5))
+
+    model.add(Dense(output_shape, activation='softmax'))
+
+
+def c3d():
+    model.add(Conv3D(64, 3, 3, 3, activation='relu',
+                     border_mode='same', name='conv1',
+                     subsample=(1, 1, 1),
+                     input_shape=input_shape))
+    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2),
+                           border_mode='valid', name='pool1'))
+    # 2nd layer group
+    model.add(Conv3D(128, 3, 3, 3, activation='relu',
+                     border_mode='same', name='conv2',
+                     subsample=(1, 1, 1)))
+    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2),
+                           border_mode='valid', name='pool2'))
+    # 3rd layer group
+    model.add(Conv3D(256, 3, 3, 3, activation='relu',
+                     border_mode='same', name='conv3a',
+                     subsample=(1, 1, 1)))
+    model.add(Conv3D(256, 3, 3, 3, activation='relu',
+                     border_mode='same', name='conv3b',
+                     subsample=(1, 1, 1)))
+    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2),
+                           border_mode='valid', name='pool3'))
+    # 4th layer group
+    model.add(Conv3D(512, 3, 3, 3, activation='relu',
+                     border_mode='same', name='conv4a',
+                     subsample=(1, 1, 1)))
+    model.add(Conv3D(512, 3, 3, 3, activation='relu',
+                     border_mode='same', name='conv4b',
+                     subsample=(1, 1, 1)))
+    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2),
+                           border_mode='valid', name='pool4'))
+
+    # 5th layer group
+    model.add(Conv3D(512, 3, 3, 3, activation='relu',
+                     border_mode='same', name='conv5a',
+                     subsample=(1, 1, 1)))
+    model.add(Conv3D(512, 3, 3, 3, activation='relu',
+                     border_mode='same', name='conv5b',
+                     subsample=(1, 1, 1)))
+    model.add(ZeroPadding3D(padding=(0, 1, 1)))
+    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2),
+                           border_mode='valid', name='pool5'))
+    model.add(Flatten())
+
+    # FC layers group
+    model.add(Dense(4096, activation='relu', name='fc6'))
+
+    model.add(Dropout(0.5))
+    model.add(Dense(4096, activation='relu', name='fc7'))
+    model.add(Dropout(0.5))
+    model.add(Dense(output_shape, activation='softmax'))
 
 
 def main(argv):
@@ -85,6 +164,7 @@ def main(argv):
     y_train = np.load(y_fname)
     print('Loading data...')
     print(x_train.shape, y_train.shape)
+    model_number = 0
     for opt, arg in opts:
         if opt in ('-t', '--test'):
             datadir = "datat/"
@@ -92,18 +172,47 @@ def main(argv):
             print(help_text)
             sys.exit()
         elif opt in ('-m', '--model'):
-            model = int(arg)
-            if model == 0:
-                x_train = np.load(datadir+'x_train_image.npy')
-                y_train = np.load(datadir+'y_train_image.npy')
-                print('Loading image data...')
-                print(x_train.shape, y_train.shape)
-                cnn_image_based(x_train, y_train, batch_size=10, validation_split=0.2, epochs=50)
-            sys.exit()
-    print(help_text)
+            model_number = int(arg)
+
+    # apply required model
+    if model_number == 0:
+        # loading image data
+        x_train = np.load(datadir + 'x_train_image.npy')
+        y_train = np.load(datadir + 'y_train_image.npy')
+        print('Loading image data...')
+        print(x_train.shape, y_train.shape)
+        cnn_image_based()
+        print("CNN Image based")
+    elif model_number == 1:
+        cnn_lstm()
+    elif model_number == 2:
+        pass
+    elif model_number == 3:
+        pass
+    elif model_number == 4:
+        pass
+
+    # compiling
+    model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
+    print('Training....')
+    print(x_train.shape)
+    early_stopping = EarlyStopping(monitor='val_loss', patience=0, verbose=0, mode='auto')
+
+    hist = model.fit(x=x_train, y=y_train, epochs=10, batch_size=10, callbacks=[early_stopping],
+                     validation_split=0.2, shuffle=True, verbose=1)
+    train_val_accuracy = hist.history
+
+    train_acc = train_val_accuracy['acc']
+    val_acc = train_val_accuracy['val_acc']
+    print('          Done!')
+    print('     Train acc: ', train_acc[-1])
+    print('Validation acc: ', val_acc[-1])
+    print(' Overfit ratio: ', val_acc[-1] / train_acc[-1])
+    save_model(model, index="imagebased")
+    print("Saved model to disk")
 
 
 if __name__ == "__main__":
-    # sys.stdout = open('logs/cleaning.txt', 'w')
-    # sys.stderr = open('logs/cleaning-err.txt', 'w')
+    # sys.stdout = open('logs/training0.txt', 'w')
+    # sys.stderr = open('logs/training0-err.txt', 'w')
     main(sys.argv[1:])
