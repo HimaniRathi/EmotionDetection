@@ -2,8 +2,9 @@ import getopt
 import sys
 from keras import Sequential
 from keras.callbacks import EarlyStopping
-from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, TimeDistributed, LSTM, Conv3D, MaxPooling3D, \
-    ZeroPadding3D
+from keras.engine.saving import model_from_json
+from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, LSTM, Conv3D, MaxPooling3D, \
+    ZeroPadding3D, GRU
 
 import numpy as np
 
@@ -11,6 +12,7 @@ datadir = "data/"
 model = Sequential()
 input_shape = (48, 48, 1)
 output_shape = 7
+
 
 def save_model(model, index=""):
     model_json = model.to_json()
@@ -54,39 +56,6 @@ def cnn_image_based():
 
 
 def cnn_lstm():
-    model.add(TimeDistributed(Conv2D(32, (7, 7), strides=(2, 2),
-                                     activation='relu', padding='same'), input_shape=input_shape))
-    model.add(TimeDistributed(Conv2D(32, (3, 3),
-                                     kernel_initializer="he_normal", activation='relu')))
-    model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
-
-    model.add(TimeDistributed(Conv2D(64, (3, 3),
-                                     padding='same', activation='relu')))
-    model.add(TimeDistributed(Conv2D(64, (3, 3),
-                                     padding='same', activation='relu')))
-    model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
-
-    model.add(TimeDistributed(Conv2D(128, (3, 3),
-                                     padding='same', activation='relu')))
-    model.add(TimeDistributed(Conv2D(128, (3, 3),
-                                     padding='same', activation='relu')))
-    model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
-
-    model.add(TimeDistributed(Conv2D(256, (3, 3),
-                                     padding='same', activation='relu')))
-    model.add(TimeDistributed(Conv2D(256, (3, 3),
-                                     padding='same', activation='relu')))
-    model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
-
-    model.add(TimeDistributed(Conv2D(512, (3, 3),
-                                     padding='same', activation='relu')))
-    model.add(TimeDistributed(Conv2D(512, (3, 3),
-                                     padding='same', activation='relu')))
-    model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
-
-    model.add(TimeDistributed(Flatten()))
-
-    model.add(Dropout(0.5))
     model.add(LSTM(256, return_sequences=False, dropout=0.5))
 
     model.add(Dense(output_shape, activation='softmax'))
@@ -145,6 +114,11 @@ def c3d():
     model.add(Dense(output_shape, activation='softmax'))
 
 
+def lstm():
+    model.add(GRU(256, dropout=0.2, recurrent_dropout=0.2, input_shape=(60, 4608)))
+    model.add(Dense(output_shape, activation='softmax'))
+
+
 def main(argv):
     global opts
     global datadir
@@ -184,9 +158,14 @@ def main(argv):
         cnn_image_based()
         print("CNN Image based")
     elif model_number == 1:
-        cnn_lstm()
+        # loading image data
+        x_train = np.load(datadir + 'x_train_vec.npy')
+        # y_train = np.load(datadir + 'y_train.npy')
+        print('Loading vector data...')
+        print(x_train.shape, y_train.shape)
+        lstm()
     elif model_number == 2:
-        pass
+        c3d()
     elif model_number == 3:
         pass
     elif model_number == 4:
@@ -196,7 +175,7 @@ def main(argv):
     model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
     print('Training....')
     print(x_train.shape)
-    early_stopping = EarlyStopping(monitor='val_loss', patience=0, verbose=0, mode='auto')
+    early_stopping = EarlyStopping(monitor='val_loss', patience=5, verbose=0, mode='auto')
 
     hist = model.fit(x=x_train, y=y_train, epochs=10, batch_size=10, callbacks=[early_stopping],
                      validation_split=0.2, shuffle=True, verbose=1)
