@@ -4,6 +4,8 @@ import sys
 import os
 import cv2
 import numpy as np
+from keras import Model
+from keras.engine.saving import model_from_json
 
 from detect_face import get_largest_face, detect_faces
 
@@ -155,6 +157,42 @@ def to_image_numpy():
     np.save(datadir + 'y_train_image', label)
 
 
+def image2vect():
+    json_file = open(datadir + 'ckplus.json', 'r')
+    loaded_model_json = json_file.read()
+    json_file.close()
+    ckplus = model_from_json(loaded_model_json)
+
+    # load weights into new model
+    ckplus.load_weights(datadir + 'ckplus.h5')
+    # ckplus.summary()
+
+    layer_name = 'flatten_1'
+    intermediate_layer_model = Model(input=ckplus.input, output=ckplus.get_layer(layer_name).output)
+    print(ckplus.input)
+    x_fname = datadir + 'x_train.npy'
+    x_train = np.load(x_fname)
+
+    videos = []
+    i = 0
+    for video in x_train:
+        print(i)
+        images = []
+        for image in video:
+            resized = (np.moveaxis(image, -1, 0)).reshape((1, 1, 48, 48))
+            # print(resized.shape)
+            vector = intermediate_layer_model.predict(resized)
+            # print(vector.shape)
+            images.append(vector.reshape(4608))
+        videos.append(images)
+        # print(np.copy(videos).shape)
+        i = i + 1
+    videos = np.copy(videos)
+    print(videos.shape)
+
+    np.save(datadir + 'x_train_vec', videos)
+
+
 def main(argv):
     global opts
     global datadir
@@ -165,9 +203,10 @@ def main(argv):
     -n --numpy      Save data/frames/ content as a numpy array in data/x_train.npy and data/y_train.npy
     -i --image      Image based numpy.
     -t --test       Test mode.(place first)
+    -v --vector     Vector based numpy
     """
     try:
-        opts, args = getopt.getopt(argv, "hs:dnti")
+        opts, args = getopt.getopt(argv, "hs:dntiv")
     except getopt.GetoptError:
         print(help_text)
         sys.exit()
@@ -192,6 +231,9 @@ def main(argv):
             sys.exit()
         elif opt in ('-i', '--image'):
             to_image_numpy()
+            sys.exit()
+        elif opt in ('-v', '--vector'):
+            image2vect()
             sys.exit()
     print(help_text)
 
