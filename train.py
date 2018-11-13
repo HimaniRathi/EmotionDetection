@@ -4,11 +4,11 @@ from keras import Sequential
 from keras.callbacks import EarlyStopping
 from keras.engine.saving import model_from_json
 from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, LSTM, Conv3D, MaxPooling3D, \
-    ZeroPadding3D, GRU
+    ZeroPadding3D, GRU, TimeDistributed
 
 import numpy as np
 
-datadir = "data/"
+datadir = "datat/"
 model = Sequential()
 input_shape = (48, 48, 1)
 output_shape = 7
@@ -23,6 +23,7 @@ def save_model(model, index=""):
 
 
 def cnn_image_based():
+
     model.add(Conv2D(filters=32, kernel_size=(3, 3), padding='same', activation='relu', input_shape=input_shape))
     conv_arch = [(32, 2), (64, 2), (128, 2)]
     dense = [64, 2]
@@ -56,12 +57,47 @@ def cnn_image_based():
 
 
 def cnn_lstm():
+
     model.add(LSTM(256, return_sequences=False, dropout=0.5))
 
     model.add(Dense(output_shape, activation='softmax'))
 
 
+def model2cnn_lstm():
+    cnn = Sequential()
+    cnn.add(Conv2D(filters=32, kernel_size=(3, 3), padding='same', activation='relu', input_shape=input_shape))
+    conv_arch = [(32, 2), (64, 2), (128, 2)]
+    dense = [64, 2]
+    if (conv_arch[0][1] - 1) != 0:
+        for i in range(conv_arch[0][1] - 1):
+            cnn.add(Conv2D(conv_arch[0][0], kernel_size=(3, 3), padding='same', activation='relu'))
+        cnn.add(MaxPooling2D(pool_size=(2, 2)))
+
+    if conv_arch[1][1] != 0:
+        for i in range(conv_arch[1][1]):
+            cnn.add(Conv2D(conv_arch[1][0], kernel_size=(3, 3), padding='same', activation='relu'))
+        cnn.add(MaxPooling2D(pool_size=(2, 2)))
+
+    if conv_arch[2][1] != 0:
+        for i in range(conv_arch[2][1]):
+            cnn.add(Conv2D(conv_arch[2][0], kernel_size=(3, 3), padding='same', activation='relu'))
+        cnn.add(MaxPooling2D(pool_size=(2, 2)))
+
+    cnn.add(Flatten())  # this converts 3D feature maps to 1D feature vectors
+    # if dense[1] != 0:
+    #     for i in range(dense[1]):
+    #         cnn.add(Dense(dense[0], activation='relu'))
+    #         cnn.add(Dropout(0.25))
+    # cnn.add(Dense(output_shape, activation='softmax'))
+    # 16 layers
+
+    '''parameters problem'''
+    model.add(TimeDistributed(cnn,632,7))
+    model.add(LSTM(256, return_sequences=False, dropout=0.5))
+    model.add(Dense(output_shape, activation='softmax'))
+
 def c3d():
+
     model.add(Conv3D(64, 3, 3, 3, activation='relu',
                      border_mode='same', name='conv1',
                      subsample=(1, 1, 1),
@@ -115,6 +151,7 @@ def c3d():
 
 
 def lstm():
+
     model.add(GRU(256, dropout=0.2, recurrent_dropout=0.2, input_shape=(60, 4608)))
     model.add(Dense(output_shape, activation='softmax'))
 
@@ -167,7 +204,9 @@ def main(argv):
     elif model_number == 2:
         c3d()
     elif model_number == 3:
-        pass
+        # x_train = np.load(datadir + 'x_train_image.npy')
+        # y_train = np.load(datadir + 'y_train_image.npy')
+        model2cnn_lstm()
     elif model_number == 4:
         pass
 

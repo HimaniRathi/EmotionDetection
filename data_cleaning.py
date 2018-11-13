@@ -142,7 +142,7 @@ def to_image_numpy():
     label = []
     for myFile in files:
         temp = myFile.split("_")
-        l: str = ''.join([i for i in temp[1] if not i.isdigit()])
+        l = ''.join([i for i in temp[1] if not i.isdigit()])
         label.append(translate_labels(l))
         image = cv2.imread(myFile, cv2.IMREAD_GRAYSCALE)
         x_data.append(image)
