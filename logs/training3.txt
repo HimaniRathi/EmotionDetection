@@ -1,0 +1,8 @@
+Loading data...
+(480, 60, 48, 48, 1) (480, 7)
+Training....
+(480, 60, 48, 48, 1)
+Train on 384 samples, validate on 96 samples
+Epoch 1/10
+
+ 10/384 [..............................] - ETA: 20:34 - loss: 0.1195 - acc: 0.3000
