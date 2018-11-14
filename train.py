@@ -56,12 +56,6 @@ def cnn_image_based():
 
 
 def cnn_lstm():
-    model.add(LSTM(256, return_sequences=False, dropout=0.5))
-
-    model.add(Dense(output_shape, activation='softmax'))
-
-
-def model2cnn_lstm():
     cnn = Sequential()
     cnn.add(Conv2D(filters=32, kernel_size=(3, 3), padding='same', activation='relu', input_shape=input_shape[1:]))
     conv_arch = [(32, 2), (64, 2), (128, 2)]
@@ -148,7 +142,7 @@ def c3d():
 
 
 def lstm():
-    model.add(GRU(256, dropout=0.2, recurrent_dropout=0.2, input_shape=(60, 4608)))
+    model.add(GRU(256, dropout=0.2, recurrent_dropout=0.2))
     model.add(Dense(output_shape, activation='softmax'))
 
 
@@ -194,7 +188,7 @@ def main(argv):
         print("CNN Image based")
     elif model_number == 1:
         # loading image data
-
+        input_shape = (60, 4608)
         x_train = np.load(datadir + 'x_train_vec.npy')
         # y_train = np.load(datadir + 'y_train.npy')
         print('Loading vector data...')
@@ -204,7 +198,7 @@ def main(argv):
         c3d()
     elif model_number == 3:
         input_shape = (60, 48, 48, 1)
-        model2cnn_lstm()
+        cnn_lstm()
     elif model_number == 4:
         pass
 
