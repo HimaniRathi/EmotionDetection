@@ -1,0 +1,126 @@
+2018-11-14 14:27:33.838516: I tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-14 14:27:37.815528: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:27:38.212896: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:28:07.934283: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:28:08.242288: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:28:15.319074: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:28:15.627136: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:28:27.154989: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:28:27.392926: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+Using TensorFlow backend.
+Traceback (most recent call last):
+  File "train.py", line 228, in <module>
+    main(sys.argv[1:])
+  File "train.py", line 212, in main
+    validation_split=0.2, shuffle=True, verbose=1)
+  File "/usr/local/lib/python3.6/dist-packages/keras/engine/training.py", line 1042, in fit
+    validation_steps=validation_steps)
+  File "/usr/local/lib/python3.6/dist-packages/keras/engine/training_arrays.py", line 185, in fit_loop
+    ins[:-1], batch_ids) + [ins[-1]]
+  File "/usr/local/lib/python3.6/dist-packages/keras/utils/generic_utils.py", line 507, in slice_arrays
+    return [None if x is None else x[start] for x in arrays]
+  File "/usr/local/lib/python3.6/dist-packages/keras/utils/generic_utils.py", line 507, in <listcomp>
+    return [None if x is None else x[start] for x in arrays]
+KeyboardInterrupt
+01] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:01.691530: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:01.691637: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:01.891198: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:03.865541: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:04.021451: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:04.777983: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:05.032268: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:08.223883: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:08.323856: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:09.640371: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:09.640485: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:09.826248: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:11.746917: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:11.906025: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:12.385903: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:12.558981: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:15.854729: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:15.955015: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:17.363220: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:17.363271: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:17.537685: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:19.399645: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:19.561864: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:20.155536: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:20.327545: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:23.590613: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:23.693015: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:25.067241: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:25.069094: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:25.254766: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:27.283373: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:27.436976: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:27.934237: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:28.108983: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:31.420187: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:31.523218: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:32.952080: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:32.952158: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:33.133579: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:35.375631: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:35.544014: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:41.138954: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:42.187590: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:48.504319: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:48.600924: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:49.923157: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:26:49.923247: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:50.086094: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:53.455155: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:26:53.612814: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:27:10.235432: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:11.472266: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:16.484312: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:16.578524: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:17.909486: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:17.909595: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:27:18.122319: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:27:20.717141: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:27:20.872757: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:27:23.753133: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:24.888537: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:29.450349: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:29.554573: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:30.892023: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:30.892114: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:27:31.102221: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:27:33.824792: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:27:33.976377: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:27:34.506253: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:34.673842: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:38.241651: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:38.398892: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:55.396505: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:27:56.882158: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:27:58.618217: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:28:17.683657: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:28:18.201417: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:28:26.153513: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:28:27.765033: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:29:18.903066: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:29:18.995836: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:29:20.262942: W tensorflow/core/framework/allocator.cc:101] Allocation of 88473600 exceeds 10% of system memory.
+2018-11-14 14:29:20.263002: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+2018-11-14 14:29:20.433677: W tensorflow/core/framework/allocator.cc:101] Allocation of 176947200 exceeds 10% of system memory.
+Using TensorFlow backend.
+Traceback (most recent call last):
+  File "train.py", line 228, in <module>
+    main(sys.argv[1:])
+  File "train.py", line 212, in main
+    validation_split=0.2, shuffle=True, verbose=1)
+  File "/usr/local/lib/python3.6/dist-packages/keras/engine/training.py", line 1042, in fit
+    validation_steps=validation_steps)
+  File "/usr/local/lib/python3.6/dist-packages/keras/engine/training_arrays.py", line 199, in fit_loop
+    outs = f(ins_batch)
+  File "/usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py", line 2661, in __call__
+    return self._call(inputs)
+  File "/usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py", line 2631, in _call
+    fetched = self._callable_fn(*array_vals)
+  File "/usr/local/lib/python3.6/dist-packages/tensorflow/python/client/session.py", line 1451, in __call__
+    self._session._session, self._handle, args, status, None)
+KeyboardInterrupt
