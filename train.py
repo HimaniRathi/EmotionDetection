@@ -8,7 +8,7 @@ from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, LSTM, Co
 
 import numpy as np
 
-datadir = "datat/"
+datadir = "data/"
 model = Sequential()
 input_shape = (48, 48, 1)
 output_shape = 7
@@ -23,7 +23,6 @@ def save_model(model, index=""):
 
 
 def cnn_image_based():
-
     model.add(Conv2D(filters=32, kernel_size=(3, 3), padding='same', activation='relu', input_shape=input_shape))
     conv_arch = [(32, 2), (64, 2), (128, 2)]
     dense = [64, 2]
@@ -57,7 +56,6 @@ def cnn_image_based():
 
 
 def cnn_lstm():
-
     model.add(LSTM(256, return_sequences=False, dropout=0.5))
 
     model.add(Dense(output_shape, activation='softmax'))
@@ -65,7 +63,7 @@ def cnn_lstm():
 
 def model2cnn_lstm():
     cnn = Sequential()
-    cnn.add(Conv2D(filters=32, kernel_size=(3, 3), padding='same', activation='relu', input_shape=input_shape))
+    cnn.add(Conv2D(filters=32, kernel_size=(3, 3), padding='same', activation='relu', input_shape=input_shape[1:]))
     conv_arch = [(32, 2), (64, 2), (128, 2)]
     dense = [64, 2]
     if (conv_arch[0][1] - 1) != 0:
@@ -91,13 +89,12 @@ def model2cnn_lstm():
     # cnn.add(Dense(output_shape, activation='softmax'))
     # 16 layers
 
-    '''parameters problem'''
-    model.add(TimeDistributed(cnn,632,7))
+    model.add(TimeDistributed(cnn, input_shape=input_shape))
     model.add(LSTM(256, return_sequences=False, dropout=0.5))
     model.add(Dense(output_shape, activation='softmax'))
 
-def c3d():
 
+def c3d():
     model.add(Conv3D(64, 3, 3, 3, activation='relu',
                      border_mode='same', name='conv1',
                      subsample=(1, 1, 1),
@@ -151,7 +148,6 @@ def c3d():
 
 
 def lstm():
-
     model.add(GRU(256, dropout=0.2, recurrent_dropout=0.2, input_shape=(60, 4608)))
     model.add(Dense(output_shape, activation='softmax'))
 
@@ -159,6 +155,7 @@ def lstm():
 def main(argv):
     global opts
     global datadir
+    global input_shape
     help_text = """train.py  -h --help
     -h --help       Get help.
     -t --test       Test data dir
@@ -188,6 +185,7 @@ def main(argv):
     # apply required model
     if model_number == 0:
         # loading image data
+        input_shape = (48, 48, 1)
         x_train = np.load(datadir + 'x_train_image.npy')
         y_train = np.load(datadir + 'y_train_image.npy')
         print('Loading image data...')
@@ -196,6 +194,7 @@ def main(argv):
         print("CNN Image based")
     elif model_number == 1:
         # loading image data
+
         x_train = np.load(datadir + 'x_train_vec.npy')
         # y_train = np.load(datadir + 'y_train.npy')
         print('Loading vector data...')
@@ -204,8 +203,7 @@ def main(argv):
     elif model_number == 2:
         c3d()
     elif model_number == 3:
-        # x_train = np.load(datadir + 'x_train_image.npy')
-        # y_train = np.load(datadir + 'y_train_image.npy')
+        input_shape = (60, 48, 48, 1)
         model2cnn_lstm()
     elif model_number == 4:
         pass
