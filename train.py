@@ -1,10 +1,12 @@
 import getopt
 import sys
+
+import keras
 from keras import Sequential
 from keras.callbacks import EarlyStopping
 from keras.engine.saving import model_from_json
 from keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, LSTM, Conv3D, MaxPooling3D, \
-    ZeroPadding3D, GRU, TimeDistributed
+    ZeroPadding3D, GRU, TimeDistributed, Bidirectional
 
 import numpy as np
 
@@ -12,12 +14,13 @@ datadir = "data/"
 model = Sequential()
 input_shape = (48, 48, 1)
 output_shape = 7
-sequence = 1
+sequence = ""
+# optimizer = keras.optimizers.Adam(lr=0.01, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
 
 
 def save_model(model, index=""):
     model_json = model.to_json()
-    with open(datadir + "model" + index + str(sequence).zfill(3) + ".json", "w") as json_file:
+    with open(datadir + "model" + index + sequence + ".json", "w") as json_file:
         json_file.write(model_json)
     # serialize weights to HDF5
     model.save_weights(datadir + "model" + index + ".h5")
@@ -208,7 +211,8 @@ def main(argv):
         pass
 
     # compiling
-    model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     print('Training....')
     print(x_train.shape)
     early_stopping = EarlyStopping(monitor='val_loss', patience=3, verbose=1, min_delta=0.0001, mode='auto')

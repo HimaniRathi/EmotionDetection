@@ -2,8 +2,10 @@ import getopt
 import numpy as np
 import sys
 import cv2
+from keras import Model
 
 from keras.models import model_from_json
+from keras.utils import plot_model
 
 from detect_face import get_largest_face, detect_faces
 
@@ -11,9 +13,22 @@ model = ""
 
 emotion_labels = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 
-
+datadir = 'data/'
 shape = (48, 48)
 shapec = (1, 48, 48, 1)
+
+
+json_file = open(datadir + 'ckplus.json', 'r')
+loaded_model_json = json_file.read()
+json_file.close()
+ckplus = model_from_json(loaded_model_json)
+
+# load weights into new model
+ckplus.load_weights(datadir + 'ckplus.h5')
+# ckplus.summary()
+
+layer_name = 'flatten_1'
+intermediate_layer_model = Model(input=ckplus.input, output=ckplus.get_layer(layer_name).output)
 
 
 def predict_emotion_image(face_image):
@@ -30,13 +45,8 @@ def predict_emotion_image(face_image):
 
 
 def predict_emotion_video(face_video):
-    gray = face_video
-    if shapec[4] == 1:
-        gray = cv2.cvtColor(face_video, cv2.COLOR_BGR2GRAY)
-    resized_img = cv2.resize(gray, shape, interpolation=cv2.INTER_AREA)
-    image = resized_img.reshape(shapec)
-    # print(image.shape)
-    list_of_list = model.predict(image, batch_size=1, verbose=1)
+    face_video = np.copy(face_video).reshape(shapec)
+    list_of_list = model.predict(face_video, batch_size=1, verbose=1)
     print(list_of_list)
     angry, disgust, fear, happy, neutral, sad, surprise = [prob for lst in list_of_list for prob in lst]
     return [angry, disgust, fear, happy, neutral, sad, surprise]
@@ -79,13 +89,13 @@ def put_emoji(angry, disgust, fear, happy, neutral, sad, surprise):
 def video_capture(image_based=False):
     cv2.namedWindow("exit on ESC")
     # to capture video from cv2
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    # out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640, 480))
+    # fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    # out = cv2.VideoWriter('output.avi', fourcc, (640,
     vc = cv2.VideoCapture(0)
     frame = 0
     video = []
     temp_video = []
-    fill = np.zeros((60, 48, 48))
+    fill = np.zeros(shape)
 
     if vc.isOpened():  # try to get the first frame
         rval, frame = vc.read()
@@ -112,12 +122,20 @@ def video_capture(image_based=False):
             if image_based:
                 angry, disgust, fear, happy, neutral, sad, surprise = predict_emotion_image(temp)
             else:
+                # implemented for only transfer learning part
                 if not frames_passed % frame_rate == 3:
-                    if video == 60:
-                        video.append(temp)
+                    temp = cv2.cvtColor(temp, cv2.COLOR_BGR2GRAY)
+                    temp = cv2.resize(temp, (48, 48), interpolation=cv2.INTER_AREA)
+                    resized = (np.moveaxis(temp, -1, 0)).reshape((1, 1, 48, 48))
+                    # print(resized.shape)
+                    vector = intermediate_layer_model.predict(resized)
+                    # print(vector.shape)
+
+                    if len(video) >= 60:
+                        video.append(vector.reshape(4608))
                         temp_video = video[1:61]
                     else:
-                        video.append(temp)
+                        video.append(vector.reshape(4608))
                         temp_video = np.concatenate((video, fill), axis=0)[0:60]
                     # out.write(frame)
                 angry, disgust, fear, happy, neutral, sad, surprise = predict_emotion_video(temp_video)
@@ -190,8 +208,20 @@ def main(argv):
         print(model.input_shape)
         video_capture(image_based=True)
     if modelno == 1:
-        shape = (60, 48, 48)
-        shapec = (1, 60, 48, 48, 1)
+        shape = (60, 4608)
+        shapec = (1, 60, 4608)
+        json_file = open('data/modeltransferA.json', 'r')
+        loaded_model_json = json_file.read()
+        json_file.close()
+        model = model_from_json(loaded_model_json)
+
+        # load weights into new model
+        model.load_weights('data/modeltransferA.h5')
+        model.summary()
+        # plot_model(ckplus, to_file='ck.svg', show_shapes=True, show_layer_names=True, rankdir='LR')
+        # plot_model(model, to_file='gru.svg', show_shapes=True, show_layer_names=True, rankdir='LR')
+        print(model.input_shape)
+        video_capture()
 
 
 if __name__ == "__main__":
