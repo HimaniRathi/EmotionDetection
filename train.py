@@ -12,11 +12,12 @@ datadir = "data/"
 model = Sequential()
 input_shape = (48, 48, 1)
 output_shape = 7
+sequence = 1
 
 
 def save_model(model, index=""):
     model_json = model.to_json()
-    with open(datadir + "model" + index + ".json", "w") as json_file:
+    with open(datadir + "model" + index + str(sequence).zfill(3) + ".json", "w") as json_file:
         json_file.write(model_json)
     # serialize weights to HDF5
     model.save_weights(datadir + "model" + index + ".h5")
@@ -84,7 +85,7 @@ def cnn_lstm():
     # 16 layers
 
     model.add(TimeDistributed(cnn, input_shape=input_shape))
-    model.add(LSTM(256, return_sequences=False, dropout=0.5))
+    model.add(GRU(256, return_sequences=False, dropout=0.5))
     model.add(Dense(output_shape, activation='softmax'))
 
 
@@ -153,7 +154,7 @@ def main(argv):
     help_text = """train.py  -h --help
     -h --help       Get help.
     -t --test       Test data dir
-    -m --model      Test mode.(place first)
+    -m --model      Model number
     """
     try:
         opts, args = getopt.getopt(argv, "htm:")
@@ -175,10 +176,11 @@ def main(argv):
             sys.exit()
         elif opt in ('-m', '--model'):
             model_number = int(arg)
-
+    index = ""
     # apply required model
     if model_number == 0:
         # loading image data
+        index = "imagebased"
         input_shape = (48, 48, 1)
         x_train = np.load(datadir + 'x_train_image.npy')
         y_train = np.load(datadir + 'y_train_image.npy')
@@ -188,6 +190,7 @@ def main(argv):
         print("CNN Image based")
     elif model_number == 1:
         # loading image data
+        index = "transfer"
         input_shape = (60, 4608)
         x_train = np.load(datadir + 'x_train_vec.npy')
         # y_train = np.load(datadir + 'y_train.npy')
@@ -195,20 +198,22 @@ def main(argv):
         print(x_train.shape, y_train.shape)
         lstm()
     elif model_number == 2:
+        index = "3dcnn"
         c3d()
     elif model_number == 3:
+        index = "cnnlstm"
         input_shape = (60, 48, 48, 1)
         cnn_lstm()
     elif model_number == 4:
         pass
 
     # compiling
-    model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
+    model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     print('Training....')
     print(x_train.shape)
-    early_stopping = EarlyStopping(monitor='val_loss', patience=5, verbose=0, mode='auto')
+    early_stopping = EarlyStopping(monitor='val_loss', patience=3, verbose=1, min_delta=0.0001, mode='auto')
 
-    hist = model.fit(x=x_train, y=y_train, epochs=10, batch_size=10, callbacks=[early_stopping],
+    hist = model.fit(x=x_train, y=y_train, epochs=20, batch_size=10, callbacks=[early_stopping],
                      validation_split=0.2, shuffle=True, verbose=1)
     train_val_accuracy = hist.history
 
@@ -218,7 +223,7 @@ def main(argv):
     print('     Train acc: ', train_acc[-1])
     print('Validation acc: ', val_acc[-1])
     print(' Overfit ratio: ', val_acc[-1] / train_acc[-1])
-    save_model(model, index="imagebased")
+    save_model(model, index=index)
     print("Saved model to disk")
 
 

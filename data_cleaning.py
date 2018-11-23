@@ -10,6 +10,7 @@ from keras.engine.saving import model_from_json
 from detect_face import get_largest_face, detect_faces
 
 datadir = "data/"
+# for this project 15 fps videos are used but savvee dataset 60fps
 
 
 def delete_frames():
