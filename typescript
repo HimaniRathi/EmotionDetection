@@ -1,42 +1,0 @@
-Script started on 2018-11-01 12:33:11+0530
-]0;raja@raja-Inspiron-5558: /mnt/InternalHardDik/Programs/Python/EmotionDet[01;32mraja@raja-Inspiron-5558[00m:[01;34m/mnt/InternalHardDik/Programs/Python/EmotionDet[00m$ ^C
-]0;raja@raja-Inspiron-5558: /mnt/InternalHardDik/Programs/Python/EmotionDet[01;32mraja@raja-Inspiron-5558[00m:[01;34m/mnt/InternalHardDik/Programs/Python/EmotionDet[00m$ ^C
-]0;raja@raja-Inspiron-5558: /mnt/InternalHardDik/Programs/Python/EmotionDet[01;32mraja@raja-Inspiron-5558[00m:[01;34m/mnt/InternalHardDik/Programs/Python/EmotionDet[00m$ ls
-[0m[34;42mdata[0m              [01;32m__init__.py[0m                 [01;32mREADME.md[0m         [01;32mserver[0m
-[01;32mdata_cleaning.py[0m  [01;32mlbpcascade_frontalface.xml[0m  [01;32mrequirements.txt[0m  [01;32mserver.c[0m
-[34;42mdatat[0m             [34;42mlogs[0m                        [34;42mscripts[0m           [01;32mtrain.py[0m
-[01;32mdetect_face.py[0m    [34;42m__pycache__[0m                 [01;32msentence.txt[0m      [01;32mtypescript[0m
-]0;raja@raja-Inspiron-5558: /mnt/InternalHardDik/Programs/Python/EmotionDet[01;32mraja@raja-Inspiron-5558[00m:[01;34m/mnt/InternalHardDik/Programs/Python/EmotionDet[00m$ cd c[Kscrippts/
-]0;raja@raja-Inspiron-5558: /mnt/InternalHardDik/Programs/Python/EmotionDet/scripts[01;32mraja@raja-Inspiron-5558[00m:[01;34m/mnt/InternalHardDik/Programs/Python/EmotionDet/scripts[00m$  ls
-[0m[01;32mclient[0m  [01;32mclient.c[0m  [01;32mip_list.sh[0m  [01;32mlabel_chi_dataset.py[0m
-]0;raja@raja-Inspiron-5558: /mnt/InternalHardDik/Programs/Python/EmotionDet/scripts[01;32mraja@raja-Inspiron-5558[00m:[01;34m/mnt/InternalHardDik/Programs/Python/EmotionDet/scripts[00m$  cat ip_list.sh 
-# source load_ip_list.sh # to get the environ vars
-self="localhost"
-all=$self
-chandu="localhost"
-himani="loaclhost"
-others="$himani:$chandu"
-l26="172.16.25.94"
-others="$others:$l26"
-l25="172.16.25.77"
-others="$others:$l25"
-l24="172.16.25.29"
-others="$others:$l24"
-l23="172.16.25.231"
-others="$others:$l23"
-l27="172.16.25.140"
-others="$others:$l27"
-l28="172.16.25.177"
-others="$others:$l28"
-lastrow="172.16.25.247"
-others="$others:$lastrow"
-all=$all:$others
-]0;raja@raja-Inspiron-5558: /mnt/InternalHardDik/Programs/Python/EmotionDet/scripts[01;32mraja@raja-Inspiron-5558[00m:[01;34m/mnt/InternalHardDik/Programs/Python/EmotionDet/scripts[00m$  cat ip_list.sh [K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kcd ..
-]0;raja@raja-Inspiron-5558: /mnt/InternalHardDik/Programs/Python/EmotionDet[01;32mraja@raja-Inspiron-5558[00m:[01;34m/mnt/InternalHardDik/Programs/Python/EmotionDet[00m$ git pus h -u origin master 
-Username for 'https://github.com': ilayaraja97
-Password for 'https://ilayaraja97@github.com': 
-Branch 'master' set up to track remote branch 'master' from 'origin'.
-Everything up-to-date
-]0;raja@raja-Inspiron-5558: /mnt/InternalHardDik/Programs/Python/EmotionDet[01;32mraja@raja-Inspiron-5558[00m:[01;34m/mnt/InternalHardDik/Programs/Python/EmotionDet[00m$ git pushh -u origin master [A]0;raja@raja-Inspiron-5558: /mnt/InternalHardDik/Programs/Python/EmotionDet[01;32mraja@raja-Inspiron-5558[00m:[01;34m/mnt/InternalHardDik/Programs/Python/EmotionDet[00m$ [2Pcd ..
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgit pushh -u origin master [K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C

@@ -154,13 +154,15 @@ def main(argv):
     global opts
     global datadir
     global input_shape
+    global sequence
     help_text = """train.py  -h --help
     -h --help       Get help.
     -t --test       Test data dir
     -m --model      Model number
+    -s --sequence   Sequence number
     """
     try:
-        opts, args = getopt.getopt(argv, "htm:")
+        opts, args = getopt.getopt(argv, "htm:s:")
     except getopt.GetoptError:
         print(help_text)
         sys.exit()
@@ -177,6 +179,8 @@ def main(argv):
         if opt in ('-h', '--help'):
             print(help_text)
             sys.exit()
+        elif opt in ('-s', '--sequence'):
+            sequence = str(arg)
         elif opt in ('-m', '--model'):
             model_number = int(arg)
     index = ""
