@@ -146,7 +146,7 @@ def c3d():
 
 
 def lstm():
-    model.add(GRU(256, dropout=0.2, recurrent_dropout=0.2))
+    model.add(LSTM(256, dropout=0.2, recurrent_dropout=0.2))
     model.add(Dense(output_shape, activation='softmax'))
 
 
